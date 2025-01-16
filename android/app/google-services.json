@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "372949152424",
+    "project_id": "placementact-f9c82",
+    "storage_bucket": "placementact-f9c82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372949152424:android:a2a3e8fd5bbf0369db089d",
+        "android_client_info": {
+          "package_name": "com.example.placementactcell"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ1bul-LX56-sRThbOuH1gwNC5PYpj90U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
