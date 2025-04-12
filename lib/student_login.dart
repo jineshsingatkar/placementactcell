@@ -19,27 +19,21 @@ class StudentLoginPage extends StatelessWidget {
 
   StudentLoginPage({super.key});
 
-
-
   Future<void> _login(BuildContext context) async {
     try {
       final String email = emailController.text.trim().toLowerCase();
       final String password = passwordController.text.trim();
 
-      // Try to sign in with the provided credentials
       await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Check if the user exists in the selected collection based on the user type
       await _firestore.collection('student').where('email', isEqualTo: email).get();
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const StudentHomePage()));
 
     } catch (e) {
-      // Handle login error (e.g., show an error message)
       print('Login failed: $e');
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Login failed: $e'),
@@ -48,61 +42,118 @@ class StudentLoginPage extends StatelessWidget {
     }
   }
 
-  void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Login'),
+        title: Text(
+          'Student Login',
+          style: TextStyle(
+            fontSize: isPortrait ? size.width * 0.05 : size.height * 0.03,
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.05,
+              vertical: size.height * 0.02,
             ),
-            const SizedBox(height: 10.0),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SizedBox(height: size.height * 0.1),
+                Image.asset(
+                  'assets/siom_logo.jpeg',
+                  width: size.width * 0.4,
+                  height: size.width * 0.4,
+                ),
+                SizedBox(height: size.height * 0.05),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  obscureText: true,
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.04),
+                ElevatedButton(
+                  onPressed: () {
+                    _login(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      vertical: size.height * 0.02,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.045 : size.height * 0.025,
+                    ),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                TextButton(
+                  onPressed: () {
+                    // Handle "Forgot Password" action
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const StudentRegistrationPage()),
+                    );
+                  },
+                  child: Text(
+                    "Don't have an account? Register here",
+                    style: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                _login(context);
-              },
-              child: const Text('Login'),
-            ),
-            const SizedBox(height: 10.0),
-            TextButton(
-              onPressed: () {
-                // Handle "Forgot Password" action
-                // You can implement the forgot password logic here
-              },
-              child: const Text('Forgot Password?'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Navigate to Student registration page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const StudentRegistrationPage()),
-                );
-              },
-              child: const Text("Don't have an account? Register here"),
-            ),
-          ],
+          ),
         ),
       ),
     );

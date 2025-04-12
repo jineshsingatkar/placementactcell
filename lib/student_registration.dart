@@ -9,6 +9,7 @@ class StudentRegistrationPage extends StatefulWidget {
   @override
   _StudentRegistrationPageState createState() => _StudentRegistrationPageState();
 }
+
 class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -26,8 +27,6 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
         password: passwordController.text,
       );
 
-
-      // Store user details in Firestore
       await _firestore.collection('student').doc(userCredential.user?.uid).set({
         'name': nameController.text,
         'college': orgController.text,
@@ -36,13 +35,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
         'studentId': idController.text,
       });
 
-      // Redirect to the WelcomePage.
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StudentLoginPage()));
     } catch (e) {
-      // Handle registration error (e.g., show an error message)
       print('Registration failed: $e');
-
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Registration failed: $e'),
@@ -50,69 +45,187 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Registration'),
+        title: Text(
+          'Student Registration',
+          style: TextStyle(
+            fontSize: isPortrait ? size.width * 0.05 : size.height * 0.03,
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextField(
-              controller: nameController, // Add this line
-              decoration: const InputDecoration(labelText: 'Full Name'),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.05,
+              vertical: size.height * 0.02,
             ),
-            const SizedBox(height: 10.0),
-            TextField(
-              controller: emailController, // Add this line
-              decoration: const InputDecoration(labelText: 'Email'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SizedBox(height: size.height * 0.02),
+                Image.asset(
+                  'assets/siom_logo.jpeg',
+                  width: size.width * 0.3,
+                  height: size.width * 0.3,
+                ),
+                SizedBox(height: size.height * 0.03),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Full Name',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                TextField(
+                  controller: orgController,
+                  decoration: InputDecoration(
+                    labelText: 'Organization/College',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                TextField(
+                  controller: idController,
+                  decoration: InputDecoration(
+                    labelText: 'Student ID',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  obscureText: true,
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Re-enter Password',
+                    labelStyle: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.04),
+                ElevatedButton(
+                  onPressed: _registerUser,
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      vertical: size.height * 0.02,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Register',
+                    style: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.045 : size.height * 0.025,
+                    ),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.02),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle Google registration
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      vertical: size.height * 0.02,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/google_logo.png',
+                        height: size.height * 0.03,
+                        width: size.height * 0.03,
+                      ),
+                      SizedBox(width: size.width * 0.02),
+                      Text(
+                        'Register with Google',
+                        style: TextStyle(
+                          fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10.0),
-            TextField(
-              controller: orgController, // Add this line
-              decoration: const InputDecoration(labelText: 'Organization/College'),
-            ),
-            const SizedBox(height: 10.0),
-            TextField(
-              controller: idController, // Add this line
-              decoration: const InputDecoration(labelText: 'studentId'),
-
-            ),
-            const SizedBox(height: 10.0),
-            TextField(
-              controller: passwordController, // Add this line
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 10.0),
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Re-enter Password'),
-            ),
-
-            const SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed:_registerUser,
-              child: const Text('Register'),
-            ),
-            const SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                // Handle Google registration
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Image.asset('assets/google_logo.png', height: 20.0, width: 20.0),
-                  const SizedBox(width: 10.0),
-                  const Text('Register with Google'),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
