@@ -5,22 +5,28 @@ class JobPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Job Page'),
-          bottom: const TabBar(
-            tabs: [
+          bottom: TabBar(
+            tabs: const [
               Tab(text: 'All Jobs'),
               Tab(text: 'Applied Jobs'),
             ],
+            labelStyle: TextStyle(
+              fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+            ),
           ),
         ),
         body: TabBarView(
           children: [
             // All Jobs Tab
-            _buildAllJobsContent(),
+            _buildAllJobsContent(size, isPortrait),
             // Applied Jobs Tab
             const Center(
               child: Text('Applied Jobs Content'),
@@ -31,7 +37,7 @@ class JobPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAllJobsContent() {
+  Widget _buildAllJobsContent(Size size, bool isPortrait) {
     // List of job items
     List<JobItem> jobItems = [
       const JobItem(
@@ -59,6 +65,10 @@ class JobPage extends StatelessWidget {
     ];
 
     return ListView.builder(
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.04,
+        vertical: size.height * 0.02,
+      ),
       itemCount: jobItems.length,
       itemBuilder: (context, index) {
         return jobItems[index];
@@ -84,42 +94,99 @@ class JobItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8.0),
+    final size = MediaQuery.of(context).size;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return Card(
+      margin: EdgeInsets.symmetric(
+        vertical: size.height * 0.01,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Company Name: $companyName'),
-          Text('CTC: $ctc'),
-          Text('Job Title: $jobTitle'),
-          Text('Location: $location'),
-          Text('Eligibility: $eligibility'),
-          const SizedBox(height: 10.0), // Add spacing for the buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Handle the action when the "Apply" button is pressed
-                  // You can navigate to an application form or perform other actions here
-                },
-                child: const Text('Apply'),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(size.width * 0.04),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Company Name: $companyName',
+              style: TextStyle(
+                fontSize: isPortrait ? size.width * 0.045 : size.height * 0.025,
+                fontWeight: FontWeight.bold,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle the action when the "View" button is pressed
-                  // You can navigate to a detailed view or perform other actions here
-                },
-                child: const Text('View'),
+            ),
+            SizedBox(height: size.height * 0.01),
+            Text(
+              'CTC: $ctc',
+              style: TextStyle(
+                fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
               ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox(height: size.height * 0.005),
+            Text(
+              'Job Title: $jobTitle',
+              style: TextStyle(
+                fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+              ),
+            ),
+            SizedBox(height: size.height * 0.005),
+            Text(
+              'Location: $location',
+              style: TextStyle(
+                fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+              ),
+            ),
+            SizedBox(height: size.height * 0.005),
+            Text(
+              'Eligibility: $eligibility',
+              style: TextStyle(
+                fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+              ),
+            ),
+            SizedBox(height: size.height * 0.02),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle the action when the "Apply" button is pressed
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.06,
+                      vertical: size.height * 0.015,
+                    ),
+                  ),
+                  child: Text(
+                    'Apply',
+                    style: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle the action when the "View" button is pressed
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.06,
+                      vertical: size.height * 0.015,
+                    ),
+                  ),
+                  child: Text(
+                    'View',
+                    style: TextStyle(
+                      fontSize: isPortrait ? size.width * 0.04 : size.height * 0.022,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

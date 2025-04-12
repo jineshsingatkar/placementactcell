@@ -50,6 +50,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     if (_isLoading) {
       return const Scaffold(
         body: Center(
@@ -80,8 +83,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/siom_logo.jpeg', width: 40.0, height: 40.0),
-            const SizedBox(width: 5.0),
+            Image.asset(
+              'assets/siom_logo.jpeg',
+              width: size.width * 0.1,
+              height: size.width * 0.1,
+            ),
+            const SizedBox(width: 8.0),
             const Text('SIOM'),
           ],
         ),
@@ -142,7 +149,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           child: Column(
             children: [
               SizedBox(
-                height: 150.0,
+                height: isPortrait ? size.height * 0.25 : size.height * 0.4,
                 child: StreamBuilder(
                   stream: _firestore.collection('slider').snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -159,15 +166,19 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     }
 
                     List<DocumentSnapshot> documents = snapshot.data!.docs;
-                    return ListView(
+                    return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      children: documents.map((doc) {
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        var doc = documents[index];
                         return _buildEventBlock(
                           title: doc['name'] ?? 'Untitled',
                           date: doc['date'] ?? 'No date',
                           details: doc['message'] ?? 'No details',
+                          size: size,
+                          isPortrait: isPortrait,
                         );
-                      }).toList(),
+                      },
                     );
                   },
                 ),
@@ -194,7 +205,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var event = snapshot.data!.docs[index];
-                      return _buildEventListItem(event);
+                      return _buildEventListItem(event, size, isPortrait);
                     },
                   );
                 },
@@ -239,76 +250,89 @@ class _StudentHomePageState extends State<StudentHomePage> {
     required String title,
     required String date,
     required String details,
+    required Size size,
+    required bool isPortrait,
   }) {
     return Container(
-      width: 200.0,
-      margin: const EdgeInsets.all(8.0),
-      padding: const EdgeInsets.all(16.0),
+      width: isPortrait ? size.width * 0.8 : size.width * 0.4,
+      margin: EdgeInsets.all(size.width * 0.02),
+      padding: EdgeInsets.all(size.width * 0.04),
       decoration: BoxDecoration(
         color: Colors.blueGrey,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16.0,
+            style: TextStyle(
+              fontSize: isPortrait ? size.width * 0.05 : size.height * 0.03,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 8.0),
+          SizedBox(height: size.height * 0.01),
           Text(
-            'Date: $date',
-            style: const TextStyle(color: Colors.white),
-          ),
-          const SizedBox(height: 8.0),
-          Expanded(
-            child: Text(
-              details,
-              style: const TextStyle(color: Colors.white),
-              overflow: TextOverflow.fade,
+            date,
+            style: TextStyle(
+              fontSize: isPortrait ? size.width * 0.04 : size.height * 0.025,
+              color: Colors.white70,
             ),
+          ),
+          SizedBox(height: size.height * 0.01),
+          Text(
+            details,
+            style: TextStyle(
+              fontSize: isPortrait ? size.width * 0.035 : size.height * 0.02,
+              color: Colors.white,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEventListItem(DocumentSnapshot event) {
+  Widget _buildEventListItem(DocumentSnapshot event, Size size, bool isPortrait) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: EdgeInsets.symmetric(
+        horizontal: size.width * 0.04,
+        vertical: size.height * 0.01,
+      ),
       child: ListTile(
-        title: Text(event['name'] ?? 'Untitled'),
-        subtitle: Text(event['date'] ?? 'No date'),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text(event['name'] ?? 'Untitled'),
-              content: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Date: ${event['date'] ?? 'No date'}'),
-                    const SizedBox(height: 8.0),
-                    Text(event['message'] ?? 'No details available'),
-                  ],
-                ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.04,
+          vertical: size.height * 0.01,
+        ),
+        title: Text(
+          event['name'] ?? 'Untitled',
+          style: TextStyle(
+            fontSize: isPortrait ? size.width * 0.045 : size.height * 0.025,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              event['date'] ?? 'No date',
+              style: TextStyle(
+                fontSize: isPortrait ? size.width * 0.035 : size.height * 0.02,
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Close'),
-                ),
-              ],
             ),
-          );
-        },
+            Text(
+              event['message'] ?? 'No details',
+              style: TextStyle(
+                fontSize: isPortrait ? size.width * 0.035 : size.height * 0.02,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -15,6 +15,33 @@ void main() async {
   runApp(const MyApp());
 }
 
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Placement Act Cell',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+        ),
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      home: const StudentLoginPage(),
+    );
+  }
+}
+
 class StudentLoginPage extends StatelessWidget {
   const StudentLoginPage({super.key});
 
@@ -28,6 +55,9 @@ class StudentLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Student Login'),
@@ -40,41 +70,42 @@ class StudentLoginPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Welcome to Placement Act Cell',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.05,
+              vertical: size.height * 0.02,
             ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _showTestNotification,
-              icon: const Icon(Icons.notifications_active),
-              label: const Text('Test Notification'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: size.height * 0.1),
+                Text(
+                  'Welcome to Placement Act Cell',
+                  style: TextStyle(
+                    fontSize: isPortrait ? size.width * 0.06 : size.height * 0.06,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: size.height * 0.05),
+                ElevatedButton.icon(
+                  onPressed: _showTestNotification,
+                  icon: const Icon(Icons.notifications_active),
+                  label: const Text('Test Notification'),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      vertical: size.height * 0.02,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Placement Act Cell',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: StudentLoginPage(),
     );
   }
 }
