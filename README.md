@@ -146,17 +146,8 @@ FIREBASE_APP_ID=your_app_id
 - API keys and credentials are stored in environment variables
 - Regular security audits are performed
 
-## Support
-
-For support, email support@siom.edu or create an issue in the repository.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgments
 
 - Flutter Team
 - Firebase Team
-- SIOM Administration
 - All contributors to this project
