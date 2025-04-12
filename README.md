@@ -46,6 +46,50 @@ A Flutter-based mobile application for managing placement activities. This appli
   - Student performance metrics
   - Company engagement analytics
 
+## Screenshots and Snapshots
+
+### Student Interface
+1. **Login Screen**
+   - Clean and intuitive login interface
+   - Email and password authentication
+   - Registration and forgot password options
+
+2. **Home Dashboard**
+   - Upcoming events carousel
+   - Recent job opportunities
+   - Quick access to profile and notifications
+
+3. **Job Portal**
+   - List of available positions
+   - Detailed job descriptions
+   - Application submission form
+
+4. **Profile Page**
+   - Personal information
+   - Academic details
+   - Application history
+
+### TPO Interface
+1. **Admin Dashboard**
+   - Overview of placements
+   - Quick actions for job posting
+   - Event management
+
+2. **Student Management**
+   - Student profiles
+   - Application tracking
+   - Performance metrics
+
+3. **Company Portal**
+   - Company profiles
+   - Job posting interface
+   - Interview scheduling
+
+4. **Analytics Dashboard**
+   - Placement statistics
+   - Student performance charts
+   - Company engagement metrics
+
 ## Technical Stack
 
 - **Frontend**: Flutter
